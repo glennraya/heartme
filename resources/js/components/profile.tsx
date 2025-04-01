@@ -6,8 +6,9 @@ const Profile = () => {
 
     return (
         <div className="flex flex-col items-center justify-center gap-2">
-            <div className="flex size-20 flex-col overflow-hidden rounded-full bg-gray-50 shadow-md shadow-black/30">
-                <img src="/images/profile-pic.jpg" alt="Profile Picture" />
+            <div className="flex size-20 flex-col overflow-hidden rounded-full bg-gray-100 shadow-md shadow-black/10">
+                {/* {auth.user.profile_picture !== null && <img src={`/images/${auth.user.profile_picture}`} alt="Profile Picture" />} */}
+                {auth.user.profile_picture !== null && <img src={`/images/${auth.user.profile_picture}`} alt="Profile Picture" />}
             </div>
             <div className="flex">
                 <span className="text-xl">{auth.user.name}</span>
