@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\LikeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -13,9 +14,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
-    Route::get('accounts', function () {
-        return Inertia::render('accounts');
-    })->name('accounts');
+    Route::get('accounts', AccountController::class);
 
     Route::post('like', LikeController::class);
 });

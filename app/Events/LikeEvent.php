@@ -11,14 +11,14 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class Like implements ShouldBroadcast
+class LikeEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public User $user, public User $likedUser)
+    public function __construct(public User $likedUser)
     {
         //
     }
@@ -31,7 +31,7 @@ class Like implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel("like.{$this->user->id}"),
+            new PrivateChannel("like.{$this->likedUser->id}"),
         ];
     }
 }

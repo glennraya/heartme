@@ -39,4 +39,10 @@ export interface User {
     created_at: string;
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
+    like: Like;
+}
+
+export interface Like {
+    id: number;
+    like_count: number;
 }
