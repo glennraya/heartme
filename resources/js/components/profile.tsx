@@ -28,13 +28,13 @@ const Profile = () => {
 
             setLikeCount(event.likedUser.like.like_count);
         });
-    }, [auth.user.id]);
+    }, [auth.user.id, auth.user.like?.like_count]);
 
     return (
         <>
             <div className="flex flex-col items-center justify-center gap-2">
                 <div className="flex size-20 flex-col overflow-hidden rounded-full bg-gray-100 shadow-md shadow-black/10">
-                    {auth.user.profile_picture !== null && <img src={`/images/${auth.user.profile_picture}`} alt="Profile Picture" />}
+                    {auth.user.avatar !== null && <img src={`/images/${auth.user.avatar}`} alt="Profile Picture" />}
                 </div>
                 <div className="flex">
                     <span className="text-xl">{auth.user.name}</span>
