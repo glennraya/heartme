@@ -24,7 +24,7 @@ const Profile = () => {
         setLikeCount(auth.user.like?.like_count);
 
         Echo.private(`like.${auth.user.id}`).listen('LikeEvent', (event: LikeEvent) => {
-            console.log(event);
+            // console.log(event);
 
             setLikeCount(event.likedUser.like.like_count);
         });
