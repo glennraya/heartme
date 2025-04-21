@@ -44,7 +44,7 @@ jobs:
           VITE_REVERB_PORT: 443
 
       - name: Synchronize Files To HeartMe Server
-        uses: easingthemes/ssh-deploy@main
+        uses: easingthemes/ssh-deploy@main  
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE }}
           SOURCE: '.'

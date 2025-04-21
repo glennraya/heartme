@@ -48,7 +48,11 @@ export default function Accounts({ users }: { users: User[] }) {
                                     <span className="text-2xl font-medium">{user.name}</span>
                                     <span className="text-gray-500">{user.email}</span>
 
-                                    <Button variant="outline" className="mt-2 max-w-fit self-end" onClick={() => handleLike(user.id)}>
+                                    <Button
+                                        variant="outline"
+                                        className="mt-2 max-w-fit cursor-pointer self-end transition duration-75 ease-in-out active:scale-75"
+                                        onClick={() => handleLike(user.id)}
+                                    >
                                         Heart me 😘
                                     </Button>
                                 </div>
