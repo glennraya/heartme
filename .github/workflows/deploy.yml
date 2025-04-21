@@ -1,63 +1,67 @@
 name: Deploy HeartMe
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
 
 jobs:
-    deploy:
-        if: "!contains(github.event.head_commit.message, '- skip cd')"
-        runs-on: ubuntu-latest
+  deploy:
+    if: "!contains(github.event.head_commit.message, '- skip cd')"
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-            - name: Test SSH Connection
-              run: |
-                  mkdir -p ~/.ssh
-                  echo "${{ secrets.SSH_PRIVATE }}" > ~/.ssh/deploy_key
-                  chmod 600 ~/.ssh/deploy_key
-                  ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.SERVER_IP }} "echo 'Connection successful'"
+      - name: Test SSH Connection
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.SERVER_IP }} "echo 'Connection successful'"
 
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
 
-            - name: Install Composer Dependencies
-              run: composer install --optimize-autoloader --no-dev --no-progress --no-interaction --prefer-dist
+      - name: Install Composer Dependencies
+        run: composer install --optimize-autoloader --no-dev --no-progress --no-interaction --prefer-dist
 
-            - name: Install Node
-              uses: actions/setup-node@v3
-              with:
-                  node-version: '22'
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
 
-            - name: Install NPM Dependencies
-              run: npm ci
+      - name: Install NPM Dependencies
+        run: npm ci
 
-            - name: Build the application
-              run: npm run build
+      - name: Build the application
+        run: |
+          echo "VITE_REVERB_APP_KEY=${{ secrets.REVERB_APP_KEY }}" >> .env
+          echo "VITE_REVERB_HOST=${{ secrets.REVERB_HOST }}" >> .env
+          echo "VITE_REVERB_PORT=443" >> .env
+          npm run build
 
-            - name: Synchronize Files To HeartMe Server
-              uses: easingthemes/ssh-deploy@main
-              env:
-                  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE }}
-                  SOURCE: '.'
-                  REMOTE_HOST: ${{ secrets.SERVER_IP }}
-                  REMOTE_USER: ${{ secrets.USERNAME }}
-                  TARGET: '/usr/share/nginx/html/heartme'
-                  ARGS: '-avz --verbose --no-perms --no-owner --no-group --exclude=".git"'
+      - name: Synchronize Files To HeartMe Server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE }}
+          SOURCE: '.'
+          REMOTE_HOST: ${{ secrets.SERVER_IP }}
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          TARGET: '/usr/share/nginx/html/heartme'
+          ARGS: '-avz --verbose --no-perms --no-owner --no-group --exclude=".git"'
 
-            - name: Run Artisan Commands for HeartMe
-              uses: appleboy/ssh-action@v0.1.6
-              with:
-                  host: ${{ secrets.SERVER_IP }}
-                  username: ${{ secrets.USERNAME }}
-                  key: ${{ secrets.SSH_PRIVATE }}
-                  script: |
-                      cd /usr/share/nginx/html/heartme
-                      php artisan migrate --force
-                      php artisan config:clear
-                      php artisan optimize:clear
-                      php artisan optimize
+      - name: Run Artisan Commands for HeartMe
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE }}
+          script: |
+            cd /usr/share/nginx/html/heartme
+            php artisan migrate --force
+            php artisan config:clear
+            php artisan optimize:clear
+            php artisan optimize
