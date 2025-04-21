@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
+import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
 import axios from 'axios';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -15,10 +15,10 @@ interface User {
     id: number;
     name: string;
     email: string;
-    profile_picture: string | null;
+    avatar: string | null;
 }
 
-export default function Accounts({users}: { users: User[] }) {
+export default function Accounts({ users }: { users: User[] }) {
     const handleLike = (id: number) => {
         axios
             .post('like', {
@@ -41,12 +41,12 @@ export default function Accounts({users}: { users: User[] }) {
                         {users.map((user) => (
                             <div className="flex gap-3" key={user.id}>
                                 <div className="flex size-14 flex-col overflow-hidden rounded-full bg-gray-100 shadow-md shadow-black/10">
-                                    {user.profile_picture !== null && <img src={`/images/${user.profile_picture}`} alt="Profile Picture" />}
+                                    {user.profile_picture !== null && <img src={`/images/${user.avatar}`} alt="Profile Picture" />}
                                 </div>
 
-                                <div className='flex flex-col'>
-                                    <span className='text-2xl font-medium'>{user.name}</span>
-                                    <span className='text-gray-500'>{user.email}</span>
+                                <div className="flex flex-col">
+                                    <span className="text-2xl font-medium">{user.name}</span>
+                                    <span className="text-gray-500">{user.email}</span>
 
                                     <Button variant="outline" className="mt-2 max-w-fit self-end" onClick={() => handleLike(user.id)}>
                                         Heart me 😘
