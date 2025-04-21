@@ -37,11 +37,11 @@ jobs:
         run: npm ci
 
       - name: Build the application
-        run: |
-          echo "VITE_REVERB_APP_KEY=${{ secrets.REVERB_APP_KEY }}" >> .env
-          echo "VITE_REVERB_HOST=${{ secrets.REVERB_HOST }}" >> .env
-          echo "VITE_REVERB_PORT=443" >> .env
-          npm run build
+        run: npm run build
+        env:
+          VITE_REVERB_APP_KEY: ${{ secrets.REVERB_APP_KEY }}
+          VITE_REVERB_HOST: ${{ secrets.REVERB_HOST }}
+          VITE_REVERB_PORT: 443
 
       - name: Synchronize Files To HeartMe Server
         uses: easingthemes/ssh-deploy@main
