@@ -41,7 +41,7 @@ export default function Accounts({ users }: { users: User[] }) {
                         {users.map((user) => (
                             <div className="flex gap-3" key={user.id}>
                                 <div className="flex size-14 flex-col overflow-hidden rounded-full bg-gray-100 shadow-md shadow-black/10">
-                                    {user.profile_picture !== null && <img src={`/images/${user.avatar}`} alt="Profile Picture" />}
+                                    {user.avatar !== null && <img src={`/images/${user.avatar}`} alt="Profile Picture" />}
                                 </div>
 
                                 <div className="flex flex-col">
